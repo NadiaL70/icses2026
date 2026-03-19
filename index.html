@@ -3,114 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICSES 2026 | Surgical Consensus</title>
+    <title>ICSES 2026 | Global Consensus Map</title>
     <style>
-        :root { --icses-blue: #004a99; --neon: #00f2ff; }
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f8f9fa; margin: 0; display: flex; flex-direction: column; align-items: center; color: #333; }
+        :root { --icses-blue: #004a99; --neon: #00f2ff; --accent: #ff0055; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; display: flex; flex-direction: column; align-items: center; }
         
-        .header { background: var(--icses-blue); color: white; width: 100%; padding: 30px 0; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .container { max-width: 850px; width: 90%; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin: -20px 0 40px 0; }
+        /* Layout */
+        .header { background: var(--icses-blue); color: white; width: 100%; padding: 30px 0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .container { max-width: 850px; width: 90%; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: -20px 0 40px 0; }
 
-        /* CASE BRIEF STYLE */
-        .case-box { background: #e9ecef; border-left: 6px solid var(--icses-blue); padding: 20px; margin-bottom: 25px; border-radius: 4px; }
-        .case-box h3 { margin-top: 0; color: var(--icses-blue); font-size: 1.1em; text-transform: uppercase; }
-        .case-box p { margin-bottom: 0; line-height: 1.5; font-size: 0.95em; }
-
-        /* STATS */
-        .stats { display: flex; justify-content: space-around; margin-bottom: 25px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; }
-        .stat-item { text-align: center; }
+        /* Case & Stats */
+        .case-box { background: #f8f9fa; border-left: 6px solid var(--icses-blue); padding: 20px; margin-bottom: 20px; border-radius: 4px; }
+        .stats { display: flex; justify-content: space-around; margin: 20px 0; padding: 15px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
         .stat-val { display: block; font-size: 1.8em; font-weight: 800; color: var(--icses-blue); }
-        .stat-lbl { font-size: 0.75em; color: #888; text-transform: uppercase; }
+        .stat-lbl { font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* IMAGE AREA */
-        .game-area { position: relative; cursor: crosshair; border-radius: 8px; overflow: hidden; background: #000; transition: opacity 0.3s; }
-        .game-area img { display: block; width: 100%; opacity: 0.85; }
-        .game-area.locked { cursor: default; }
+        /* The Map */
+        .game-area { position: relative; cursor: crosshair; border-radius: 8px; overflow: hidden; background: #000; }
+        .game-area img { display: block; width: 100%; opacity: 0.9; transition: opacity 0.5s; }
+        .game-area.voted img { opacity: 0.6; } /* Dims slightly after voting to make dots pop */
         
+        /* Dots */
         .click-dot {
-            position: absolute; width: 12px; height: 12px; background: var(--neon);
-            border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%);
-            pointer-events: none; box-shadow: 0 0 10px var(--neon);
+            position: absolute; width: 10px; height: 10px; border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none; border: 1px solid white;
         }
+        .crowd-dot { background: rgba(0, 242, 255, 0.5); box-shadow: 0 0 5px var(--neon); }
+        .user-dot { background: var(--accent); width: 14px; height: 14px; z-index: 10; box-shadow: 0 0 15px var(--accent); animation: pulse 1.5s infinite; }
 
-        #feedback-msg { text-align: center; font-weight: bold; color: #2b8a3e; margin-top: 15px; display: none; }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.8; } }
+
+        /* Social & Messaging */
+        #reveal-ui { display: none; text-align: center; margin-top: 20px; animation: fadeIn 0.8s; }
+        .share-btn { 
+            background: var(--icses-blue); color: white; border: none; padding: 12px 25px; 
+            border-radius: 25px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; margin: 10px;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="header">
     <h1>ICSES 2026 VANCOUVER</h1>
-    <p>Global Surgical Consensus Initiative</p>
+    <p>Scientific Program: Surgical Consensus Challenge</p>
 </div>
 
 <div class="container">
     <div class="case-box">
-        <h3>Clinical Case: 26-03-A</h3>
-        <p><strong>Patient:</strong> 62y Female. <strong>Injury:</strong> High-energy 4-part proximal humerus fracture with medial comminution. 
-        <br><strong>Objective:</strong> Identify the optimal entry point for your primary reduction tension anchor.</p>
+        <strong>CASE 26-03-A:</strong> 62F, 4-part proximal humerus fracture. Comminuted medial calcar. 
+        <br><small>Click the image to place your primary reduction anchor. Your choice is blinded until submission.</small>
     </div>
 
     <div class="stats">
-        <div class="stat-item"><span class="stat-val" id="count-display">0</span><span class="stat-lbl">Surgeons Synced</span></div>
+        <div class="stat-item"><span class="stat-val" id="count-display">--</span><span class="stat-lbl">Experts Synced</span></div>
         <div class="stat-item"><span class="stat-val">72.1%</span><span class="stat-lbl">Target Capacity</span></div>
     </div>
     
     <div class="game-area" id="heatmap-area">
-        <img src="humerus.png" alt="Surgical Case Image">
+        <img src="humerus.png" id="main-img">
         <div id="dots-container"></div>
     </div>
-    <div id="feedback-msg">✓ Coordinate Locked. Your expertise has been recorded.</div>
+
+    <div id="reveal-ui">
+        <h3 style="color: var(--icses-blue);">✓ Consensus Revealed</h3>
+        <p>Your entry (red) vs. the global community (cyan).</p>
+        <a href="#" class="share-btn" id="share-linkedin">Share on LinkedIn</a>
+    </div>
 </div>
 
 <script>
     const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzfodw3eKErkOubHpCUUOJXSAnjBAXhGK6seAw_YeOl780OSiwW3xoF403uAkL8Pwf0Ag/exec";
     const area = document.getElementById('heatmap-area');
-    const dots = document.getElementById('dots-container');
+    const dotsContainer = document.getElementById('dots-container');
     const countDisplay = document.getElementById('count-display');
-    const feedback = document.getElementById('feedback-msg');
+    const revealUI = document.getElementById('reveal-ui');
     
-    let hasVoted = false; // "Single Point" Guard
+    let hasVoted = false;
+    let crowdData = [];
+
+    // Load initial count quietly
+    async function init() {
+        try {
+            const res = await fetch(SHEETS_URL);
+            crowdData = await res.json();
+            countDisplay.innerText = crowdData.length;
+        } catch (e) { countDisplay.innerText = "0"; }
+    }
 
     area.addEventListener('click', function(e) {
-        if (hasVoted) return; // Stop additional points
+        if (hasVoted) return;
 
         const rect = area.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-        createDot(x, y); 
+        // 1. Submit to Google
+        fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ x: x, y: y, region: 'Global' }) });
+
+        // 2. Visual Reveal
         hasVoted = true;
-        area.classList.add('locked');
-        feedback.style.display = 'block';
+        area.classList.add('voted');
+        createDot(x, y, true); // User dot
+        revealUI.style.display = 'block';
+        
+        crowdData.forEach(row => createDot(row[1], row[2], false));
+        countDisplay.innerText = crowdData.length + 1;
 
-        fetch(SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            body: JSON.stringify({ x: x, y: y, region: 'Global' })
-        });
-
-        countDisplay.innerText = parseInt(countDisplay.innerText) + 1;
+        // 3. Setup Social Link
+        const shareText = encodeURIComponent(`I just contributed to the ICSES 2026 Global Surgical Consensus Map for Vancouver! Join the expert panel here: ${window.location.href}`);
+        document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`;
     });
 
-    async function loadData() {
-        try {
-            const res = await fetch(SHEETS_URL);
-            const data = await res.json();
-            countDisplay.innerText = data.length;
-            data.forEach(row => createDot(row[1], row[2]));
-        } catch (e) { console.log("Initializing data..."); }
-    }
-
-    function createDot(x, y) {
+    function createDot(x, y, isUser) {
+        if (!x || !y) return;
         const dot = document.createElement('div');
-        dot.className = 'click-dot';
+        dot.className = isUser ? 'click-dot user-dot' : 'click-dot crowd-dot';
         dot.style.left = x + '%';
         dot.style.top = y + '%';
-        dots.appendChild(dot);
+        dotsContainer.appendChild(dot);
     }
 
-    window.onload = loadData;
+    window.onload = init;
 </script>
-
 </body>
 </html>
