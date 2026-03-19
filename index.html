@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSES 2026 | Global Reconstruction</title>
+    <style>
+        :root {
+            --icses-blue: #004a99;
+            --neon-glow: #00f2ff;
+            --medical-grey: #f4f7f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--medical-grey);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { color: var(--icses-blue); text-align: center; margin-bottom: 10px; }
+        p.subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+
+        /* PROGRESS BAR STYLING */
+        .progress-section { margin-bottom: 40px; }
+        .bar-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 25px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 72%; /* Simulated starting point */
+            background: linear-gradient(90deg, var(--icses-blue), var(--neon-glow));
+            transition: width 2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* THE HEATMAP GAME AREA */
+        .game-area {
+            position: relative;
+            cursor: crosshair;
+            border: 3px solid var(--icses-blue);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+        }
+        .game-area img {
+            display: block;
+            width: 100%;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .game-area:hover img { opacity: 1; }
+
+        .click-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: rgba(0, 242, 255, 0.7);
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+
+        .instruction-box {
+            background: #eef6ff;
+            padding: 15px;
+            border-left: 5px solid var(--icses-blue);
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .share-btn {
+            display: block;
+            width: 100%;
+            background: var(--icses-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .share-btn:hover { transform: scale(1.02); background: #003a7a; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>THE VANCOUVER RECONSTRUCTION</h1>
+        <p class="subtitle">Vancouver, September 2026 | Global Consensus Challenge</p>
+
+        <div class="progress-section">
+            <strong>Congress Synergy: <span id="sync-percent">72%</span> Synced</strong>
+            <div class="bar-container">
+                <div class="bar-fill" id="main-bar">72%</div>
+            </div>
+        </div>
+
+        <div class="instruction-box">
+            <strong>Case Challenge:</strong> A 62-year-old patient presents with a 4-part proximal humerus fracture. 
+            <br><strong>Click to place your primary tension band anchor.</strong>
+        </div>
+
+        <div class="game-area" id="heatmap-area">
+            <img src="https://via.placeholder.com/800x500/000000/00f2ff?text=SURGICAL+X-RAY+PLACEHOLDER" alt="Shoulder X-Ray">
+            <div id="dots-container"></div>
+        </div>
+
+        <button class="share-btn" onclick="shareResult()">Sync My Approach & Invite Peers</button>
+    </div>
+
+    <script>
+        const heatmap = document.getElementById('heatmap-area');
+        const dotsContainer = document.getElementById('dots-container');
+        const bar = document.getElementById('main-bar');
+        const syncText = document.getElementById('sync-percent');
+
+        // 1. CLICK HANDLER
+        heatmap.addEventListener('click', function(e) {
+            const rect = heatmap.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+            // Create visual feedback
+            createDot(x, y);
+
+            // Behavioral Trick: Slowly increase the bar after a click
+            setTimeout(updateGlobalSync, 500);
+
+            console.log(`Expert Click Recorded: X=${x.toFixed(2)}%, Y=${y.toFixed(2)}%`);
+        });
+
+        function createDot(x, y) {
+            const dot = document.createElement('div');
+            dot.className = 'click-dot';
+            dot.style.left = x + '%';
+            dot.style.top = y + '%';
+            dotsContainer.appendChild(dot);
+        }
+
+        // 2. AUTOMATION LOGIC (Simulated)
+        function updateGlobalSync() {
+            let current = 72;
+            let target = 72.1; // Small increment for visual reward
+            bar.style.width = target + '%';
+            bar.innerText = target + '%';
+            syncText.innerText = target + '%';
+        }
+
+        // 3. SOCIAL MEDIA PAYOFF
+        function shareResult() {
+            const text = encodeURIComponent("I just placed my anchor on the #ICSES2026 Reconstruction Map. My approach is locked in for Vancouver. Can you find the optimal entry point? 🦴");
+            const url = "https://twitter.com/intent/tweet?text=" + text;
+            window.open(url, '_blank');
+        }
+    </script>
+
+</body>
+</html>
