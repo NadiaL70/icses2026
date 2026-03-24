@@ -3,99 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICSES 2026 | Surgical Consensus Map</title>
+    
+    <meta property="og:title" content="ICSES 2026 | Global Surgical Consensus Map">
+    <meta property="og:description" content="Join the international community in mapping surgical expertise for complex humerus fractures.">
+    <meta property="og:image" content="humerus.png"> <meta property="og:url" content="https://nadial70.github.io/icses2026/">
+    <meta property="og:type" content="website">
+
+    <title>ICSES 2026 | Global Surgical Consensus Map</title>
+    
     <style>
         :root { 
             --icses-blue: #004a99; 
             --neon: #00f2ff; 
             --accent: #ff0055; 
             --gold: #fcc419;
-            --dark: #1e293b;
+            --slate: #475569;
         }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f1f5f9; margin: 0; color: #1e293b; }
         
-        /* SLEEK NEW HEADER */
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f1f5f9; margin: 0; color: #1e293b; line-height: 1.5; }
+        
+        /* MODERN GRADIENT HEADER */
         .hero-header { 
             background: linear-gradient(135deg, var(--icses-blue) 0%, #002d5e 100%);
             color: white; 
             width: 100%; 
-            padding: 50px 0 80px 0; 
+            padding: 60px 0 100px 0; 
             text-align: center;
-            border-bottom: 5px solid var(--neon);
+            border-bottom: 6px solid var(--neon);
         }
-        .hero-header h1 { margin: 0; font-size: 2.5em; letter-spacing: 2px; font-weight: 900; }
-        .hero-header p { opacity: 0.9; margin: 10px 0 0 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 1px; }
+        .hero-header h1 { margin: 0; font-size: 2.8em; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .hero-header p { opacity: 0.9; margin: 10px 0 0 0; font-size: 1.2em; text-transform: uppercase; letter-spacing: 2px; font-weight: 300; }
 
         .container { 
             max-width: 800px; 
             width: 92%; 
             background: white; 
             padding: 40px; 
-            border-radius: 16px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
-            margin: -50px auto 50px auto; 
+            border-radius: 24px; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.12); 
+            margin: -70px auto 50px auto; 
             position: relative;
         }
 
-        /* CLEANER STATS */
-        .stat-focus { 
-            text-align: center; 
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .stat-val { font-size: 3.5em; font-weight: 900; color: var(--icses-blue); line-height: 1; }
-        .stat-lbl { font-size: 0.8em; color: #64748b; text-transform: uppercase; font-weight: bold; margin-top: 5px; }
+        /* DATA COUNTER */
+        .stat-focus { text-align: center; margin-bottom: 35px; padding-bottom: 25px; border-bottom: 1px solid #e2e8f0; }
+        .stat-val { font-size: 4.5em; font-weight: 900; color: var(--icses-blue); line-height: 1; letter-spacing: -3px; }
+        .stat-lbl { font-size: 0.9em; color: var(--slate); text-transform: uppercase; font-weight: 800; margin-top: 8px; letter-spacing: 1px; }
 
         .case-box { 
-            background: #f8fafc; 
-            border-left: 5px solid var(--neon); 
-            padding: 20px; 
-            margin-bottom: 25px; 
-            border-radius: 8px;
-            font-size: 0.95em;
+            background: #f8fafc; border-left: 5px solid var(--icses-blue); padding: 22px; 
+            margin-bottom: 30px; border-radius: 8px; font-size: 1em;
         }
 
-        /* THE MAP */
-        .game-area { position: relative; cursor: crosshair; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .game-area img { display: block; width: 100%; opacity: 0.95; transition: 0.6s; }
-        .game-area.voted img { opacity: 0.55; filter: grayscale(30%); }
+        /* INTERACTIVE AREA */
+        .game-area { position: relative; cursor: crosshair; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .game-area img { display: block; width: 100%; opacity: 0.95; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .game-area.voted img { opacity: 0.5; filter: contrast(1.1) grayscale(30%); }
         
         /* DOTS */
         .click-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; border: 1px solid white; }
-        .crowd-dot { background: var(--neon); box-shadow: 0 0 8px var(--neon); opacity: 0.7; }
-        .user-dot { background: var(--accent); width: 14px; height: 14px; z-index: 10; box-shadow: 0 0 15px var(--accent); animation: pulse 1.5s infinite; }
+        .crowd-dot { background: var(--neon); box-shadow: 0 0 10px var(--neon); opacity: 0.75; }
+        .user-dot { background: var(--accent); width: 16px; height: 16px; z-index: 10; box-shadow: 0 0 20px var(--accent); animation: pulse 1.5s infinite; }
 
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.7; } }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0.5; } }
 
-        /* REVEAL UI UPGRADE */
-        #reveal-ui { display: none; text-align: center; margin-top: 30px; animation: slideUp 0.6s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* REVEAL UI & PREVIEW */
+        #reveal-ui { display: none; text-align: center; margin-top: 35px; animation: slideUp 0.7s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .reveal-header { 
-            background: #f0fdfa; border: 1px solid #ccfbf1; padding: 20px; border-radius: 12px; margin-bottom: 25px; 
+        .reveal-card { background: #f0fdfa; border: 1px solid #ccfbf1; padding: 25px; border-radius: 15px; margin-bottom: 25px; }
+
+        .post-preview-box {
+            background: #fdfdfd; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 20px; 
+            margin-bottom: 25px; text-align: left; font-size: 0.9em; color: #334155; position: relative;
+        }
+        .post-preview-box::before {
+            content: "POST PREVIEW"; position: absolute; top: -12px; left: 15px; 
+            background: var(--slate); color: white; font-size: 0.7em; padding: 3px 10px; border-radius: 4px; font-weight: bold;
         }
 
         /* BUTTONS */
-        .btn-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .btn { 
-            padding: 16px; border-radius: 10px; cursor: pointer; font-weight: 800; 
-            text-decoration: none; font-size: 0.9em; transition: 0.2s; border: none;
+            padding: 18px; border-radius: 12px; cursor: pointer; font-weight: 800; 
+            text-decoration: none; font-size: 1em; transition: 0.3s; border: none;
+            display: flex; align-items: center; justify-content: center;
         }
-        .btn:active { transform: scale(0.98); }
-        
-        .btn-copy { background: #e2e8f0; color: #475569; }
-        .btn-reg { background: var(--gold); color: #000; box-shadow: 0 4px 15px rgba(252, 196, 25, 0.4); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .btn-copy { background: #f1f5f9; color: var(--slate); border: 1px solid #e2e8f0; }
+        .btn-reg { background: var(--gold); color: #000; box-shadow: 0 6px 20px rgba(252, 196, 25, 0.4); }
 
-        /* COPY TOOLTIP */
-        #copy-toast { visibility: hidden; background: #333; color: white; padding: 8px 16px; border-radius: 20px; position: fixed; bottom: 30px; font-size: 0.8em; }
+        /* TOAST */
+        #copy-toast { 
+            visibility: hidden; background: #1e293b; color: white; padding: 12px 24px; 
+            border-radius: 50px; position: fixed; bottom: 40px; font-size: 0.9em; z-index: 100;
+        }
     </style>
 </head>
 <body>
 
 <div class="hero-header">
-    <h1>ICSES 2026</h1>
-    <p>Global Surgical Consensus Map</p>
+    <h1>ICSES 2026 VANCOUVER</h1>
+    <p>Scientific Program Consensus Challenge</p>
 </div>
 
 <div class="container">
@@ -105,8 +114,8 @@
     </div>
 
     <div class="case-box">
-        <strong>CLINICAL BRIEF:</strong> 62F, 4-part proximal humerus fracture. 
-        <br>Click to identify your primary reduction anchor. Blinded entry mode active.
+        <strong>CASE 26-03-A:</strong> 62F, 4-part proximal humerus fracture. 
+        <br>Click to identify your primary reduction anchor. Blinded mode active.
     </div>
     
     <div class="game-area" id="heatmap-area">
@@ -115,25 +124,29 @@
     </div>
 
     <div id="reveal-ui">
-        <div class="reveal-header">
-            <h3 style="color: #0d9488; margin: 0;">✓ Consensus Data Synced</h3>
-            <p style="color: #555; margin: 5px 0 0 0;">Your entry (red) vs. the global community (cyan).</p>
+        <div class="reveal-card">
+            <h3 style="color: #0d9488; margin: 0; font-size: 1.5em;">✓ Data Synced</h3>
+            <p style="color: #64748b; margin: 5px 0 0 0;">Your entry (red) vs. the international community (cyan).</p>
         </div>
+
+        <div class="post-preview-box" id="post-text-display">
+            </div>
         
         <div class="btn-stack">
-            <button class="btn btn-copy" onclick="copyLinkedIn()">Copy LinkedIn Post</button>
+            <button class="btn btn-copy" id="copy-btn" onclick="copyLinkedIn()">Copy Post Text</button>
             <a href="https://icses2026.org/registration/" class="btn btn-reg" target="_blank">Register for Vancouver</a>
         </div>
     </div>
 </div>
 
-<div id="copy-toast">Post copied to clipboard!</div>
+<div id="copy-toast">Post text copied to clipboard! 📋</div>
 
 <script>
     const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzfodw3eKErkOubHpCUUOJXSAnjBAXhGK6seAw_YeOl780OSiwW3xoF403uAkL8Pwf0Ag/exec";
     const area = document.getElementById('heatmap-area');
     const countDisplay = document.getElementById('count-display');
     const revealUI = document.getElementById('reveal-ui');
+    const postDisplay = document.getElementById('post-text-display');
     
     let hasVoted = false;
     let crowdData = [];
@@ -158,6 +171,12 @@
         hasVoted = true;
         area.classList.add('voted');
         createDot(x, y, true); 
+        
+        // Prepare Social Text
+        const shareLink = "https://nadial70.github.io/icses2026/";
+        const socialText = `I just contributed my clinical expertise to the ICSES 2026 Global Surgical Consensus Map. Fascinating to see the real-time variation in anchor points for this 4-part fracture! 🦴📍\n\nCompare your choice with the global community here: ${shareLink}\n\n#ICSES2026 #ShoulderSurgery #Vancouver #SurgicalConsensus`;
+        postDisplay.innerText = socialText;
+
         revealUI.style.display = 'block';
         
         crowdData.forEach(row => createDot(row[1], row[2], false));
@@ -174,12 +193,24 @@
     }
 
     function copyLinkedIn() {
-        const text = `I just contributed my clinical expertise to the ICSES 2026 Global Surgical Consensus Map. Fascinating to see the variation in anchor points for this 4-part fracture! 🦴📍\n\nJoin the expert panel here: ${window.location.href}\n\n#ICSES2026 #ShoulderSurgery #Vancouver`;
+        const text = postDisplay.innerText;
         navigator.clipboard.writeText(text);
+        
+        const btn = document.getElementById("copy-btn");
+        const originalText = btn.innerText;
+        btn.innerText = "✓ Copied!";
+        btn.style.background = "#0d9488";
+        btn.style.color = "white";
         
         const toast = document.getElementById("copy-toast");
         toast.style.visibility = "visible";
-        setTimeout(() => { toast.style.visibility = "hidden"; }, 3000);
+        
+        setTimeout(() => { 
+            toast.style.visibility = "hidden"; 
+            btn.innerText = originalText;
+            btn.style.background = "#f1f5f9";
+            btn.style.color = "#475569";
+        }, 3000);
     }
 
     window.onload = init;
