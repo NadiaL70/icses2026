@@ -3,68 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICSES 2026 | Global Consensus Map</title>
+    <title>ICSES 2026 | Surgical Consensus Map</title>
     <style>
-        :root { --icses-blue: #004a99; --neon: #00f2ff; --accent: #ff0055; --gold: #fcc419; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        
-        /* Layout */
-        .header { background: var(--icses-blue); color: white; width: 100%; padding: 30px 0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .container { max-width: 850px; width: 90%; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: -20px 0 40px 0; }
-
-        /* Case & Stats */
-        .case-box { background: #f8f9fa; border-left: 6px solid var(--icses-blue); padding: 20px; margin-bottom: 20px; border-radius: 4px; }
-        .stats { display: flex; justify-content: space-around; margin: 20px 0; padding: 15px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-        .stat-val { display: block; font-size: 1.8em; font-weight: 800; color: var(--icses-blue); }
-        .stat-lbl { font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* The Map */
-        .game-area { position: relative; cursor: crosshair; border-radius: 8px; overflow: hidden; background: #000; }
-        .game-area img { display: block; width: 100%; opacity: 0.9; transition: opacity 0.5s; }
-        .game-area.voted img { opacity: 0.6; } 
-        
-        /* Dots */
-        .click-dot {
-            position: absolute; width: 10px; height: 10px; border-radius: 50%;
-            transform: translate(-50%, -50%); pointer-events: none; border: 1px solid white;
+        :root { 
+            --icses-blue: #004a99; 
+            --neon: #00f2ff; 
+            --accent: #ff0055; 
+            --gold: #fcc419;
+            --dark: #1e293b;
         }
-        .crowd-dot { background: rgba(0, 242, 255, 0.5); box-shadow: 0 0 5px var(--neon); }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f1f5f9; margin: 0; color: #1e293b; }
+        
+        /* SLEEK NEW HEADER */
+        .hero-header { 
+            background: linear-gradient(135deg, var(--icses-blue) 0%, #002d5e 100%);
+            color: white; 
+            width: 100%; 
+            padding: 50px 0 80px 0; 
+            text-align: center;
+            border-bottom: 5px solid var(--neon);
+        }
+        .hero-header h1 { margin: 0; font-size: 2.5em; letter-spacing: 2px; font-weight: 900; }
+        .hero-header p { opacity: 0.9; margin: 10px 0 0 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 1px; }
+
+        .container { 
+            max-width: 800px; 
+            width: 92%; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 16px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            margin: -50px auto 50px auto; 
+            position: relative;
+        }
+
+        /* CLEANER STATS */
+        .stat-focus { 
+            text-align: center; 
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .stat-val { font-size: 3.5em; font-weight: 900; color: var(--icses-blue); line-height: 1; }
+        .stat-lbl { font-size: 0.8em; color: #64748b; text-transform: uppercase; font-weight: bold; margin-top: 5px; }
+
+        .case-box { 
+            background: #f8fafc; 
+            border-left: 5px solid var(--neon); 
+            padding: 20px; 
+            margin-bottom: 25px; 
+            border-radius: 8px;
+            font-size: 0.95em;
+        }
+
+        /* THE MAP */
+        .game-area { position: relative; cursor: crosshair; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .game-area img { display: block; width: 100%; opacity: 0.95; transition: 0.6s; }
+        .game-area.voted img { opacity: 0.55; filter: grayscale(30%); }
+        
+        /* DOTS */
+        .click-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; border: 1px solid white; }
+        .crowd-dot { background: var(--neon); box-shadow: 0 0 8px var(--neon); opacity: 0.7; }
         .user-dot { background: var(--accent); width: 14px; height: 14px; z-index: 10; box-shadow: 0 0 15px var(--accent); animation: pulse 1.5s infinite; }
 
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.8; } }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.7; } }
 
-        /* Reveal UI & Buttons */
-        #reveal-ui { display: none; text-align: center; margin-top: 20px; animation: fadeIn 0.8s; }
-        .btn-group { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
-        
-        .btn { 
-            padding: 14px 28px; border-radius: 30px; cursor: pointer; font-weight: bold; 
-            text-decoration: none; display: inline-block; transition: transform 0.2s;
+        /* REVEAL UI UPGRADE */
+        #reveal-ui { display: none; text-align: center; margin-top: 30px; animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .reveal-header { 
+            background: #f0fdfa; border: 1px solid #ccfbf1; padding: 20px; border-radius: 12px; margin-bottom: 25px; 
         }
-        .btn:hover { transform: scale(1.05); }
-        
-        .btn-share { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
-        .btn-reg { background: var(--gold); color: #000; border: none; box-shadow: 0 4px 15px rgba(252, 196, 25, 0.4); }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* BUTTONS */
+        .btn-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn { 
+            padding: 16px; border-radius: 10px; cursor: pointer; font-weight: 800; 
+            text-decoration: none; font-size: 0.9em; transition: 0.2s; border: none;
+        }
+        .btn:active { transform: scale(0.98); }
+        
+        .btn-copy { background: #e2e8f0; color: #475569; }
+        .btn-reg { background: var(--gold); color: #000; box-shadow: 0 4px 15px rgba(252, 196, 25, 0.4); }
+
+        /* COPY TOOLTIP */
+        #copy-toast { visibility: hidden; background: #333; color: white; padding: 8px 16px; border-radius: 20px; position: fixed; bottom: 30px; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>ICSES 2026 VANCOUVER</h1>
-    <p>Scientific Program: Surgical Consensus Challenge</p>
+<div class="hero-header">
+    <h1>ICSES 2026</h1>
+    <p>Global Surgical Consensus Map</p>
 </div>
 
 <div class="container">
-    <div class="case-box">
-        <strong>CASE 26-03-A:</strong> 62F, 4-part proximal humerus fracture. Comminuted medial calcar. 
-        <br><small>Click the image to place your primary reduction anchor. Your choice is blinded until submission.</small>
+    <div class="stat-focus">
+        <div class="stat-val" id="count-display">--</div>
+        <div class="stat-lbl">Expert Points Recorded</div>
     </div>
 
-    <div class="stats">
-        <div class="stat-item"><span class="stat-val" id="count-display">--</span><span class="stat-lbl">Experts Synced</span></div>
-        <div class="stat-item"><span class="stat-val">72.1%</span><span class="stat-lbl">Target Capacity</span></div>
+    <div class="case-box">
+        <strong>CLINICAL BRIEF:</strong> 62F, 4-part proximal humerus fracture. 
+        <br>Click to identify your primary reduction anchor. Blinded entry mode active.
     </div>
     
     <div class="game-area" id="heatmap-area">
@@ -73,21 +115,23 @@
     </div>
 
     <div id="reveal-ui">
-        <h3 style="color: var(--icses-blue); margin-bottom: 5px;">✓ Consensus Revealed</h3>
-        <p style="margin-top: 0;">Your entry (red) vs. the global community (cyan).</p>
+        <div class="reveal-header">
+            <h3 style="color: #0d9488; margin: 0;">✓ Consensus Data Synced</h3>
+            <p style="color: #555; margin: 5px 0 0 0;">Your entry (red) vs. the global community (cyan).</p>
+        </div>
         
-        <div class="btn-group">
-            <a href="#" class="btn btn-share" id="share-linkedin">Share on LinkedIn</a>
-            
-            <a href="https://icses2026.org/registration/" class="btn btn-reg" target="_blank">Register for Vancouver 2026</a>
+        <div class="btn-stack">
+            <button class="btn btn-copy" onclick="copyLinkedIn()">Copy LinkedIn Post</button>
+            <a href="https://icses2026.org/registration/" class="btn btn-reg" target="_blank">Register for ICSES 2026</a>
         </div>
     </div>
 </div>
 
+<div id="copy-toast">Post copied to clipboard!</div>
+
 <script>
     const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzfodw3eKErkOubHpCUUOJXSAnjBAXhGK6seAw_YeOl780OSiwW3xoF403uAkL8Pwf0Ag/exec";
     const area = document.getElementById('heatmap-area');
-    const dotsContainer = document.getElementById('dots-container');
     const countDisplay = document.getElementById('count-display');
     const revealUI = document.getElementById('reveal-ui');
     
@@ -118,9 +162,6 @@
         
         crowdData.forEach(row => createDot(row[1], row[2], false));
         countDisplay.innerText = crowdData.length + 1;
-
-        const shareUrl = window.location.href;
-        document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
     });
 
     function createDot(x, y, isUser) {
@@ -129,7 +170,16 @@
         dot.className = isUser ? 'click-dot user-dot' : 'click-dot crowd-dot';
         dot.style.left = x + '%';
         dot.style.top = y + '%';
-        dotsContainer.appendChild(dot);
+        document.getElementById('dots-container').appendChild(dot);
+    }
+
+    function copyLinkedIn() {
+        const text = `I just contributed my clinical expertise to the ICSES 2026 Global Surgical Consensus Map. Fascinating to see the variation in anchor points for this 4-part fracture! 🦴📍\n\nJoin the expert panel here: ${window.location.href}\n\n#ICSES2026 #ShoulderSurgery #Vancouver`;
+        navigator.clipboard.writeText(text);
+        
+        const toast = document.getElementById("copy-toast");
+        toast.style.visibility = "visible";
+        setTimeout(() => { toast.style.visibility = "hidden"; }, 3000);
     }
 
     window.onload = init;
