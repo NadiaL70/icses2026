@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICSES 2026 | Global Consensus Map</title>
     <style>
-        :root { --icses-blue: #004a99; --neon: #00f2ff; --accent: #ff0055; }
+        :root { --icses-blue: #004a99; --neon: #00f2ff; --accent: #ff0055; --gold: #fcc419; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; display: flex; flex-direction: column; align-items: center; }
         
         /* Layout */
@@ -21,7 +21,7 @@
         /* The Map */
         .game-area { position: relative; cursor: crosshair; border-radius: 8px; overflow: hidden; background: #000; }
         .game-area img { display: block; width: 100%; opacity: 0.9; transition: opacity 0.5s; }
-        .game-area.voted img { opacity: 0.6; } /* Dims slightly after voting to make dots pop */
+        .game-area.voted img { opacity: 0.6; } 
         
         /* Dots */
         .click-dot {
@@ -33,12 +33,19 @@
 
         @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.8; } }
 
-        /* Social & Messaging */
+        /* Reveal UI & Buttons */
         #reveal-ui { display: none; text-align: center; margin-top: 20px; animation: fadeIn 0.8s; }
-        .share-btn { 
-            background: var(--icses-blue); color: white; border: none; padding: 12px 25px; 
-            border-radius: 25px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; margin: 10px;
+        .btn-group { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
+        
+        .btn { 
+            padding: 14px 28px; border-radius: 30px; cursor: pointer; font-weight: bold; 
+            text-decoration: none; display: inline-block; transition: transform 0.2s;
         }
+        .btn:hover { transform: scale(1.05); }
+        
+        .btn-share { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
+        .btn-reg { background: var(--gold); color: #000; border: none; box-shadow: 0 4px 15px rgba(252, 196, 25, 0.4); }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -66,9 +73,14 @@
     </div>
 
     <div id="reveal-ui">
-        <h3 style="color: var(--icses-blue);">✓ Consensus Revealed</h3>
-        <p>Your entry (red) vs. the global community (cyan).</p>
-        <a href="#" class="share-btn" id="share-linkedin">Share on LinkedIn</a>
+        <h3 style="color: var(--icses-blue); margin-bottom: 5px;">✓ Consensus Revealed</h3>
+        <p style="margin-top: 0;">Your entry (red) vs. the global community (cyan).</p>
+        
+        <div class="btn-group">
+            <a href="#" class="btn btn-share" id="share-linkedin">Share on LinkedIn</a>
+            
+            <a href="https://icses2026.org/registration/" class="btn btn-reg" target="_blank">Register for Vancouver 2026</a>
+        </div>
     </div>
 </div>
 
@@ -82,7 +94,6 @@
     let hasVoted = false;
     let crowdData = [];
 
-    // Load initial count quietly
     async function init() {
         try {
             const res = await fetch(SHEETS_URL);
@@ -98,21 +109,18 @@
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-        // 1. Submit to Google
         fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ x: x, y: y, region: 'Global' }) });
 
-        // 2. Visual Reveal
         hasVoted = true;
         area.classList.add('voted');
-        createDot(x, y, true); // User dot
+        createDot(x, y, true); 
         revealUI.style.display = 'block';
         
         crowdData.forEach(row => createDot(row[1], row[2], false));
         countDisplay.innerText = crowdData.length + 1;
 
-        // 3. Setup Social Link
-        const shareText = encodeURIComponent(`I just contributed to the ICSES 2026 Global Surgical Consensus Map for Vancouver! Join the expert panel here: ${window.location.href}`);
-        document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`;
+        const shareUrl = window.location.href;
+        document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
     });
 
     function createDot(x, y, isUser) {
